@@ -1,9 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("JS загружен");
 
+  // 🔥 Telegram WebApp init
   const tg = window.Telegram?.WebApp;
+
   if (tg) {
     tg.ready();
+    tg.expand();
+
+    console.log("INIT DATA:", tg.initData);
+    console.log("INIT DATA UNSAFE:", tg.initDataUnsafe);
   }
 
   const listPage = document.getElementById("listPage");
@@ -85,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCart();
   };
 
-  // 🔥 ПРАВИЛЬНАЯ отправка
+  // 🔥 ОФОРМЛЕНИЕ ЗАКАЗА
   window.checkout = function() {
     if (!tg) {
       alert("Открой через Telegram ❌");
@@ -93,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const order = {
-      initData: tg.initData,
+      initData: tg.initData, // теперь должно быть НЕ пусто
       items: cart,
       total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
     };
