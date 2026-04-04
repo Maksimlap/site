@@ -97,8 +97,8 @@ window.checkout = function() {
 
   tg.sendData(JSON.stringify(order));
 
-  // // 👉 ВАЖНО: закрываем WebApp
-  // tg.close();
+  // 👉 ВАЖНО: закрываем WebApp
+  tg.close();
 };
 window.openProfile = function() {
   alert("Тут будет профиль / заказы");
