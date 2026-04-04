@@ -87,18 +87,22 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.checkout = function() {
-    const tg = window.Telegram?.WebApp;
+    // const tg = window.Telegram?.WebApp;
 
-    // 👉 ДОБАВИЛ: безопасное получение user
-    const user = tg?.initDataUnsafe?.user;
+    // // 👉 ДОБАВИЛ: безопасное получение user
+    // const user = tg?.initDataUnsafe?.user;
 
-    console.log("USER BEFORE SEND:", user);
+    // console.log("USER BEFORE SEND:", user);
 
-    const order = {
-      user: user || null,
-      items: cart,
-      total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
-    };
+    const tg = window.Telegram.WebApp;
+
+const order = {
+  initData: tg.initData, // ВОТ ЭТО ГЛАВНОЕ
+  items: cart,
+  total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
+};
+
+tg.sendData(JSON.stringify(order));
 
     console.log("ORDER:", order);
 
