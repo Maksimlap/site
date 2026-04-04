@@ -76,35 +76,24 @@ window.openCart = function() {
   renderCart();
 };
  window.checkout = function() {
-  const tg = window.Telegram?.WebApp;
-
-  if (!tg) {
-    alert("Не Telegram окружение ❌");
+  if (!window.Telegram || !window.Telegram.WebApp) {
+    alert("Открой через Telegram ❌");
     return;
   }
 
-  const user = tg.initDataUnsafe?.user;
+  const user = window.Telegram.WebApp.initDataUnsafe
+    ? window.Telegram.WebApp.initDataUnsafe.user
+    : null;
 
   console.log("USER:", user);
 
   const order = {
-    user: user ? {
-      id: user.id,
-      username: user.username,
-      first_name: user.first_name
-    } : null,
+    user: user || null,
     items: cart,
     total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
   };
 
-  console.log("ORDER:", order);
-
-  tg.sendData(JSON.stringify(order));
-
-  alert("Заказ отправлен");
-};
-
-  Telegram.WebApp.sendData(JSON.stringify(order));
+  window.Telegram.WebApp.sendData(JSON.stringify(order));
 
   alert("Заказ отправлен");
 };
