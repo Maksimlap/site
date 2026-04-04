@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>enwsea project</title>
+
+  <!-- Telegram WebApp -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== СТРАНИЦА СПИСКА ===== -->
+<div class = "logo">
+  <img src="logosmall.png">
+  </div>
+<div id="listPage">
+  <div class = "products">
+  <div class="product">
+  <div class="product-image">
+    <img src="blue face.jpg">
+  </div>
+
+  <div class="product-info">
+    <p class="title">Товар 1</p>
+    <p class="price">100 ₽</p>
+    <button onclick="openProduct(1)">Купить</button>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-image">
+    <img src="blue face.jpg">
+  </div>
+
+  <div class="product-info">
+    <p class="title">Товар 2</p>
+    <p class="price">200 ₽</p>
+    <button onclick="openProduct(2)" >Купить</button>
+  </div>
+</div>
+  </div>
+  <p>Общая информация: магазин внутри Telegram</p>
+</div>
+
+<!-- ===== СТРАНИЦА ТОВАРА ===== -->
+<div id="productPage" style="display:none;">
+
+  <button onclick="goBack()">← Назад</button>
+
+  <div class="product-page">
+
+    <div class="product-page-image">
+      <img src="blue face.jpg">
+    </div>
+
+    <div class="product-page-info">
+      <h2 id="title"></h2>
+      <p class="price" id="price"></p>
+      <p id="desc"></p>
+    </div>
+
+  </div>
+
+  <button class="buy-btn" onclick="buy()">Купить</button>
+
+</div>
+<div class="bottom-bar">
+  <div class="tab" onclick="openCart()">🛒</div>
+  <div class="tab" onclick="openProfile()">👤</div>
+</div>
+<div id="cartPage" style="display:none;">
+  <button onclick="goBack()">← Назад</button>
+  <h2>Корзина</h2>
+
+  <div id="cartItems"></div>
+
+  <button onclick="checkout()">Оформить заказ</button>
+</div>
+
+<!-- JS -->
+<script src="app.js"></script>
+
+</body>
+</html>
