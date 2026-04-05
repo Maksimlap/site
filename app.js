@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("JS загружен");
-  const params = new URLSearchParams(window.location.search);
-const userId = params.get("userId");
-
-console.log("USER ID:", userId);
 
   const tg = window.Telegram?.WebApp;
 
@@ -12,8 +8,21 @@ console.log("USER ID:", userId);
     tg.expand();
   }
 
+  // 🔥 получаем userId (URL → fallback Telegram)
+  const params = new URLSearchParams(window.location.search);
+  let userId = params.get("userId");
+
+  if (!userId) {
+    userId = tg?.initDataUnsafe?.user?.id;
+  }
+
+  console.log("USER ID:", userId);
+  console.log("URL:", window.location.href);
+
   const listPage = document.getElementById("listPage");
   const productPage = document.getElementById("productPage");
+  const cartPage = document.getElementById("cartPage");
+
   const price = document.getElementById("price");
   const title = document.getElementById("title");
   const desc = document.getElementById("desc");
@@ -21,13 +30,12 @@ console.log("USER ID:", userId);
   let cart = [];
   let currentProductId = null;
 
-  const cartPage = document.getElementById("cartPage");
-
   if (!listPage || !productPage || !cartPage || !title || !desc || !price) {
     console.error("❌ Один из элементов не найден");
     return;
   }
 
+  // 🔥 открыть товар
   window.openProduct = function(id) {
     currentProductId = id;
 
@@ -45,12 +53,14 @@ console.log("USER ID:", userId);
     }
   };
 
+  // 🔥 назад
   window.goBack = function() {
     productPage.style.display = "none";
     cartPage.style.display = "none";
     listPage.style.display = "block";
   };
 
+  // 🔥 добавить в корзину
   window.buy = function() {
     const product = {
       id: currentProductId,
@@ -70,6 +80,7 @@ console.log("USER ID:", userId);
     alert("Добавлено в корзину");
   };
 
+  // 🔥 рендер корзины
   function renderCart() {
     const container = document.getElementById("cartItems");
     container.innerHTML = "";
@@ -83,6 +94,7 @@ console.log("USER ID:", userId);
     });
   }
 
+  // 🔥 открыть корзину
   window.openCart = function() {
     listPage.style.display = "none";
     productPage.style.display = "none";
@@ -91,7 +103,7 @@ console.log("USER ID:", userId);
     renderCart();
   };
 
-  // 🔥 ОФОРМЛЕНИЕ ЗАКАЗА (без initData)
+  // 🔥 оформление заказа
   window.checkout = function() {
     if (!tg) {
       alert("Открой через Telegram ❌");
@@ -115,57 +127,60 @@ console.log("USER ID:", userId);
     tg.close();
   };
 
+  // 🔥 формат заказа
   function formatOrder(raw) {
-  try {
-    const order = JSON.parse(raw);
+    try {
+      const order = JSON.parse(raw);
 
-    let text = "";
+      let text = "";
 
-    order.items.forEach(item => {
-      text += `${item.title} × ${item.quantity}\n`;
-    });
-
-    text += `💰 ${order.total} ₽`;
-
-    return text;
-  } catch {
-    return raw;
-  }
-}
-
-window.openProfile = async function() {
-  if (!userId) {
-    alert("Ошибка: userId не передан ❌");
-    return;
-  }
-
-  try {
-    const res = await fetch(`https://tgbot-production-8fee.up.railway.app/orders/${userId}`);
-    const orders = await res.json();
-
-    const container = document.getElementById("ordersList");
-    container.innerHTML = "";
-
-    if (orders.length === 0) {
-      container.innerHTML = "<p>У вас пока нет заказов</p>";
-    } else {
-      orders.forEach(raw => {
-        const div = document.createElement("div");
-        div.className = "order-card";
-        div.innerText = formatOrder(raw);
-        container.appendChild(div);
+      order.items.forEach(item => {
+        text += `${item.title} × ${item.quantity}\n`;
       });
+
+      text += `💰 ${order.total} ₽`;
+
+      return text;
+    } catch {
+      return raw;
+    }
+  }
+
+  // 🔥 ЛК (главное)
+  window.openProfile = async function() {
+    if (!userId) {
+      alert("userId не найден ❌\nОткрой через /start");
+      return;
     }
 
-    // переключение страниц
-    listPage.style.display = "none";
-    productPage.style.display = "none";
-    cartPage.style.display = "block";
+    try {
+      const url = `https://tgbot-production-8fee.up.railway.app/orders/${userId}`;
+      console.log("FETCH:", url);
 
-  } catch (e) {
-    console.log(e);
-    alert("Ошибка загрузки заказов ❌");
-  }
+      const res = await fetch(url);
+      const orders = await res.json();
 
-};
+      const container = document.getElementById("ordersList");
+      container.innerHTML = "";
+
+      if (orders.length === 0) {
+        container.innerHTML = "<p>У вас пока нет заказов</p>";
+      } else {
+        orders.forEach(raw => {
+          const div = document.createElement("div");
+          div.className = "order-card";
+          div.innerText = formatOrder(raw);
+          container.appendChild(div);
+        });
+      }
+
+      listPage.style.display = "none";
+      productPage.style.display = "none";
+      cartPage.style.display = "block";
+
+    } catch (e) {
+      console.error("FETCH ERROR:", e);
+      alert("Ошибка загрузки заказов ❌");
+    }
+  };
 });
