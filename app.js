@@ -166,6 +166,6 @@ window.openProfile = async function() {
     console.log(e);
     alert("Ошибка загрузки заказов ❌");
   }
-};
+
 };
 });
