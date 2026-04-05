@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     listPage.style.display = "none";
     productPage.style.display = "none";
     cartPage.style.display = "block";
+    profilePage.style.display = "none";
 
     renderCart();
   };
@@ -174,9 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
           container.appendChild(div);
         });
       }
-
+  
       listPage.style.display = "none";
       productPage.style.display = "none";
+      cartPage.style.display = "none";
       profilePage.style.display = "block";
 
     } catch (e) {
