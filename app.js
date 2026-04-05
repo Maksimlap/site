@@ -134,18 +134,10 @@ console.log("USER ID:", userId);
 }
 
 window.openProfile = async function() {
-  const tg = window.Telegram?.WebApp;
-
-  if (!tg) {
-    alert("Открой через Telegram ❌");
+  if (!userId) {
+    alert("Ошибка: userId не передан ❌");
     return;
   }
-
-  // ❗ временно берём userId через prompt
-  // (пока не сделали норм авторизацию)
-  const userId = prompt("Введи свой Telegram ID");
-
-  if (!userId) return;
 
   try {
     const res = await fetch(`https://tgbot-production-8fee.up.railway.app/orders/${userId}`);
@@ -174,5 +166,6 @@ window.openProfile = async function() {
     console.log(e);
     alert("Ошибка загрузки заказов ❌");
   }
+};
 };
 });
