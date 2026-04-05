@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const listPage = document.getElementById("listPage");
   const productPage = document.getElementById("productPage");
   const cartPage = document.getElementById("cartPage");
-
+  const profilePage = document.getElementById("profilePage");
   const price = document.getElementById("price");
   const title = document.getElementById("title");
   const desc = document.getElementById("desc");
@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     productPage.style.display = "none";
     cartPage.style.display = "none";
     listPage.style.display = "block";
+    profilePage.style.display = "none";
   };
 
   // 🔥 добавить в корзину
@@ -176,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       listPage.style.display = "none";
       productPage.style.display = "none";
-      cartPage.style.display = "block";
+      profilePage.style.display = "block";
 
     } catch (e) {
       console.error("FETCH ERROR:", e);
