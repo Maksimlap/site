@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("JS загружен");
+  const params = new URLSearchParams(window.location.search);
+const userId = params.get("userId");
+
+console.log("USER ID:", userId);
 
   const tg = window.Telegram?.WebApp;
 
@@ -144,7 +148,7 @@ window.openProfile = async function() {
   if (!userId) return;
 
   try {
-    const res = await fetch(`https://ТВОЙ-RAILWAY-URL/orders/${userId}`);
+    const res = await fetch(`https://tgbot-production-8fee.up.railway.app/orders/${userId}`);
     const orders = await res.json();
 
     const container = document.getElementById("ordersList");
