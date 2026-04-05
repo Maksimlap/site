@@ -111,7 +111,64 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.close();
   };
 
-  window.openProfile = function() {
-    alert("Тут будет профиль / заказы");
-  };
+  function formatOrder(raw) {
+  try {
+    const order = JSON.parse(raw);
+
+    let text = "";
+
+    order.items.forEach(item => {
+      text += `${item.title} × ${item.quantity}\n`;
+    });
+
+    text += `💰 ${order.total} ₽`;
+
+    return text;
+  } catch {
+    return raw;
+  }
+}
+
+window.openProfile = async function() {
+  const tg = window.Telegram?.WebApp;
+
+  if (!tg) {
+    alert("Открой через Telegram ❌");
+    return;
+  }
+
+  // ❗ временно берём userId через prompt
+  // (пока не сделали норм авторизацию)
+  const userId = prompt("Введи свой Telegram ID");
+
+  if (!userId) return;
+
+  try {
+    const res = await fetch(`https://ТВОЙ-RAILWAY-URL/orders/${userId}`);
+    const orders = await res.json();
+
+    const container = document.getElementById("ordersList");
+    container.innerHTML = "";
+
+    if (orders.length === 0) {
+      container.innerHTML = "<p>У вас пока нет заказов</p>";
+    } else {
+      orders.forEach(raw => {
+        const div = document.createElement("div");
+        div.className = "order-card";
+        div.innerText = formatOrder(raw);
+        container.appendChild(div);
+      });
+    }
+
+    // переключение страниц
+    listPage.style.display = "none";
+    productPage.style.display = "none";
+    cartPage.style.display = "block";
+
+  } catch (e) {
+    console.log(e);
+    alert("Ошибка загрузки заказов ❌");
+  }
+};
 });
