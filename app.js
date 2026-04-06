@@ -106,28 +106,45 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 🔥 оформление заказа
-  window.checkout = function() {
-    if (!tg) {
-      alert("Открой через Telegram ❌");
-      return;
-    }
+  window.checkout = async function() {
+  if (!userId) {
+    alert("Ошибка userId ❌");
+    return;
+  }
 
-    if (cart.length === 0) {
-      alert("Корзина пустая ❌");
-      return;
-    }
+  if (cart.length === 0) {
+    alert("Корзина пустая ❌");
+    return;
+  }
 
-    const order = {
-      items: cart,
-      total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
-    };
-
-    console.log("SEND:", order);
-
-    tg.sendData(JSON.stringify(order));
-
-    tg.close();
+  const order = {
+    userId: Number(userId),
+    items: cart,
+    total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
   };
+
+  console.log("SEND TO API:", order);
+
+  try {
+    const res = await fetch("https://tgbot-production-8fee.up.railway.app/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(order)
+    });
+
+    console.log("RESPONSE:", res.status);
+
+    alert("Заказ оформлен ✅");
+
+    cart = []; // очищаем корзину
+
+  } catch (e) {
+    console.error("ERROR:", e);
+    alert("Ошибка отправки ❌");
+  }
+};
 
   // 🔥 формат заказа
   function formatOrder(raw) {
