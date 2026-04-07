@@ -153,9 +153,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let text = "";
 
-      order.items.forEach(item => {
-        text += `${item.title} × ${item.quantity}\n`;
-      });
+      // order.items.forEach(item => {
+      //   text += `${item.title} × ${item.quantity}\n`;
+      // });
+      orders.forEach(order => {
+  const div = document.createElement("div");
+  div.className = "order-card";
+
+  let text = "";
+
+  order.data.items.forEach(item => {
+    text += `${item.title} × ${item.quantity}\n`;
+  });
+
+  text += `💰 ${order.data.total}\n`;
+  text += `📅 ${new Date(order.createdAt).toLocaleString()}`;
+
+  div.innerText = text;
+
+  container.appendChild(div);
+});
 
       text += `💰 ${order.total} ₽`;
 
